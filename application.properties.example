@@ -1,2 +1,6 @@
+# Hidden application.properties file.
+# Rename it to `application.properties`
+# Put your hidden properties here
+
 spring.datasource.password=password
 jwt.secret=MySecretHere
