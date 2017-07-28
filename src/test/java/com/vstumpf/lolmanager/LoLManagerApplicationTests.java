@@ -1,4 +1,4 @@
-package com.vstumpf.LoLManager;
+package com.vstumpf.lolmanager;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
