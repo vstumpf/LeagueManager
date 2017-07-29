@@ -1,4 +1,7 @@
 target/
+.mvn/
+mvnw
+mvnw.cmd
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
@@ -24,4 +27,4 @@ nbdist/
 .nb-gradle/
 
 ### private application properties ###
-application.properties
+/application.properties
