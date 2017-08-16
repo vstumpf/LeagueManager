@@ -1,0 +1,301 @@
+{
+	"variables": [],
+	"info": {
+		"name": "LoLManager",
+		"_postman_id": "afc3cf71-f8a1-60bf-cf41-879b719e1232",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "001 AdminTests",
+			"description": "",
+			"item": [
+				{
+					"name": "Login Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests[\"Token Returned\"] = jsonData.token;",
+									"if (tests[\"Token Returned\"]) {",
+									"    postman.setEnvironmentVariable(\"curLogin\", jsonData.token);",
+									"}",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/auth",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"a@a.com\",\n\t\"password\": \"admin\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET /user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests[\"User Returned\"] = jsonData;",
+									"tests[\"Username\"] = jsonData.username;",
+									"tests[\"firstname\"] = jsonData.firstName;",
+									"tests[\"lastname\"] = jsonData.lastName;",
+									"tests[\"enabled\"] = jsonData.hasOwnProperty('enabled');",
+									"tests[\"Authorities\"] = jsonData.authorities;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/user",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{curLogin}}",
+								"description": "Token for Authorization"
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET /protected",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/protected",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{curLogin}}",
+								"description": "Token for Authorization"
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET /role/1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests[\"Role Returned\"] = jsonData;",
+									"tests[\"id == 1\"] = jsonData.id === 1;",
+									"tests[\"role\"] = jsonData.role;",
+									"tests[\"users\"] = jsonData.users;",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/role/1",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{curLogin}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "002 UserTests",
+			"description": "",
+			"item": [
+				{
+					"name": "Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests[\"Token Returned\"] = jsonData.token;",
+									"if (tests[\"Token Returned\"]) {",
+									"    postman.setEnvironmentVariable(\"curLogin\", jsonData.token);",
+									"}",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/auth",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"u@u.com\",\n\t\"password\": \"password\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET /user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests[\"User Returned\"] = jsonData;",
+									"tests[\"Username\"] = jsonData.username;",
+									"tests[\"firstName\"] = jsonData.firstName;",
+									"tests[\"lastName\"] = jsonData.lastName;",
+									"tests[\"enabled\"] = jsonData.hasOwnProperty('enabled');",
+									"tests[\"Authorities\"] = jsonData.authorities;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/user",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{curLogin}}",
+								"description": "Token for Authorization"
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET /protected",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 403\"] = responseCode.code === 403;",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/protected",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{curLogin}}",
+								"description": "Token for Authorization"
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET /user/2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests[\"User Returned\"] = jsonData;",
+									"tests[\"Username\"] = jsonData.username;",
+									"tests[\"firstName\"] = jsonData.firstName;",
+									"tests[\"lastName\"] = jsonData.lastName;",
+									"tests[\"roles\"] = jsonData.roles;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/user/2",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{curLogin}}",
+								"description": "Token for Authorization"
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
