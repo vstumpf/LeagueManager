@@ -1,5 +1,6 @@
 package com.vstumpf.lolmanager.model;
 
+import com.fasterxml.jackson.annotation.*;
 import com.sun.istack.internal.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,6 +24,8 @@ import java.util.Set;
 @Entity
 @Table(name = "User")
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
 public class User {
 
     @Id
@@ -59,7 +62,7 @@ public class User {
     @NotNull
     private Date lastPasswordResetDate;
 
-    @ManyToMany(fetch  = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "User_Role",
             joinColumns = {@JoinColumn(name = "user_id")},

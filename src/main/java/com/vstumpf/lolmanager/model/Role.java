@@ -1,5 +1,7 @@
 package com.vstumpf.lolmanager.model;
 
+import com.fasterxml.jackson.annotation.*;
+import com.vstumpf.lolmanager.dto.RoleDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -15,6 +17,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Role")
+@JsonIdentityInfo(generator= ObjectIdGenerators.IntSequenceGenerator.class)
 public class Role {
 
     @Getter
@@ -33,8 +36,7 @@ public class Role {
 
     @Getter
     @Setter
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
     private List<User> users;
-
 
 }

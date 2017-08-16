@@ -17,8 +17,8 @@ import java.util.Date;
 public class JwtUser implements UserDetails {
     private final Long id;
     private final String username;
-    @Getter private final String firstname;
-    @Getter private final String lastname;
+    @Getter private final String firstName;
+    @Getter private final String lastName;
     private final String password;
     private final Collection<? extends GrantedAuthority> roles;
     private final boolean enabled;
