@@ -30,9 +30,13 @@ public class RoleDto {
     private class RoleUserDto {
         private long id;
         private String username;
-        public RoleUserDto(User u) {
+        private String firstName;
+        private String lastName;
+        private RoleUserDto(User u) {
             this.id = u.getId();
             this.username = u.getUsername();
+            this.firstName = u.getFirstName();
+            this.lastName = u.getLastName();
         }
     }
 }

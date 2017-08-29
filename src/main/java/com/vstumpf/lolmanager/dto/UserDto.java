@@ -19,6 +19,8 @@ public class UserDto {
     private String lastName;
     private List<UserRoleDto> roles;
 
+    public UserDto() { super(); }
+
     public UserDto (User u) {
         this.id = u.getId();
         this.username = u.getUsername();
@@ -34,7 +36,7 @@ public class UserDto {
     private class UserRoleDto{
         private int id;
         private RoleName role;
-        public UserRoleDto(Role r) {
+        private UserRoleDto(Role r) {
             this.id = r.getId();
             this.role = r.getRole();
         }

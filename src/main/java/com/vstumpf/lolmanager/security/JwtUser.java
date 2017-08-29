@@ -1,6 +1,7 @@
 package com.vstumpf.lolmanager.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.vstumpf.lolmanager.model.RoleName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -8,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 /**
  * Created by Vincent on 7/24/2017.
@@ -71,5 +73,10 @@ public class JwtUser implements UserDetails {
     @JsonIgnore
     public Date getLastPasswordResetDate() {
         return lastPasswordResetDate;
+    }
+
+    @JsonIgnore
+    public boolean isAdmin() {
+        return roles.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()).contains("ROLE_ADMIN");
     }
 }
