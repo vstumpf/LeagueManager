@@ -44,14 +44,14 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"username\": \"a@a.com\",\n\t\"password\": \"admin\"\n}"
+							"raw": "{\n  \"username\": \"a@a.com\",\n  \"password\": \"admin\"\n}"
 						},
 						"description": ""
 					},
 					"response": []
 				},
 				{
-					"name": "GET /user",
+					"name": "GET /users",
 					"event": [
 						{
 							"listen": "test",
@@ -61,18 +61,50 @@
 									"tests[\"Status code is 200\"] = responseCode.code === 200;",
 									"",
 									"var jsonData = JSON.parse(responseBody);",
-									"tests[\"User Returned\"] = jsonData;",
-									"tests[\"Username\"] = jsonData.username;",
-									"tests[\"firstname\"] = jsonData.firstName;",
-									"tests[\"lastname\"] = jsonData.lastName;",
-									"tests[\"enabled\"] = jsonData.hasOwnProperty('enabled');",
-									"tests[\"Authorities\"] = jsonData.authorities;"
+									"tests[\"3 Users Returned\"] = jsonData.length === 3;",
+									"",
+									"var idx = 0;",
+									"tests[\"[\"+idx+\"] id\"] = jsonData[idx].id === 1;",
+									"tests[\"[\"+idx+\"] username\"] = jsonData[idx].username === \"a@a.com\";",
+									"tests[\"[\"+idx+\"] firstname\"] = jsonData[idx].firstName === \"admin\";",
+									"tests[\"[\"+idx+\"] lastname\"] = jsonData[idx].lastName === \"admin\";",
+									"tests[\"[\"+idx+\"] lastPasswordDate\"] = jsonData[idx].lastPasswordResetDate === 1451635200000;",
+									"tests[\"[\"+idx+\"] iso\"] = jsonData[idx].iso === \"ISO1\";",
+									"tests[\"[\"+idx+\"] roles\"] = jsonData[idx].roles.length === 2;",
+									"tests[\"[\"+idx+\"] role Admin\"] = jsonData[idx].roles[0].id === 1;",
+									"tests[\"[\"+idx+\"] role User\"] = jsonData[idx].roles[1].id === 2;",
+									"tests[\"[\"+idx+\"] field numbers\"] = Object.keys(jsonData[idx]).length === 7;",
+									"",
+									"idx++;",
+									"",
+									"tests[\"[\"+idx+\"] id\"] = jsonData[idx].id === 2;",
+									"tests[\"[\"+idx+\"] username\"] = jsonData[idx].username === \"u@u.com\";",
+									"tests[\"[\"+idx+\"] firstname\"] = jsonData[idx].firstName === \"user\";",
+									"tests[\"[\"+idx+\"] lastname\"] = jsonData[idx].lastName === \"user\";",
+									"tests[\"[\"+idx+\"] lastPasswordDate\"] = jsonData[idx].lastPasswordResetDate === 1451635200000;",
+									"tests[\"[\"+idx+\"] iso\"] = jsonData[idx].iso === \"ISO2\";",
+									"tests[\"[\"+idx+\"] roles\"] = jsonData[idx].roles.length === 1;",
+									"tests[\"[\"+idx+\"] role User\"] = jsonData[idx].roles[0].id === 1;",
+									"tests[\"[\"+idx+\"] field numbers\"] = Object.keys(jsonData[idx]).length === 7;",
+									"",
+									"idx++;",
+									"",
+									"tests[\"[\"+idx+\"] id\"] = jsonData[idx].id === 3;",
+									"tests[\"[\"+idx+\"] username\"] = jsonData[idx].username === \"d@d.com\";",
+									"tests[\"[\"+idx+\"] firstname\"] = jsonData[idx].firstName === \"user_d\";",
+									"tests[\"[\"+idx+\"] lastname\"] = jsonData[idx].lastName === \"user_d\";",
+									"tests[\"[\"+idx+\"] lastPasswordDate\"] = jsonData[idx].lastPasswordResetDate === 1451635200000;",
+									"tests[\"[\"+idx+\"] iso\"] = jsonData[idx].iso === \"ISO3\";",
+									"tests[\"[\"+idx+\"] roles\"] = jsonData[idx].roles.length === 1;",
+									"tests[\"[\"+idx+\"] role User\"] = jsonData[idx].roles[0].id === 1;",
+									"tests[\"[\"+idx+\"] field numbers\"] = Object.keys(jsonData[idx]).length === 7;",
+									""
 								]
 							}
 						}
 					],
 					"request": {
-						"url": "{{url}}/user",
+						"url": "{{url}}/users",
 						"method": "GET",
 						"header": [
 							{
@@ -82,7 +114,7 @@
 							}
 						],
 						"body": {},
-						"description": ""
+						"description": "Get a list of users"
 					},
 					"response": []
 				},
@@ -128,9 +160,36 @@
 									"var jsonData = JSON.parse(responseBody);",
 									"tests[\"Role Returned\"] = jsonData;",
 									"tests[\"id == 1\"] = jsonData.id === 1;",
-									"tests[\"role\"] = jsonData.role;",
-									"tests[\"users\"] = jsonData.users;",
-									""
+									"tests[\"role\"] = jsonData.role === \"ROLE_USER\";",
+									"tests[\"field numbers\"] = Object.keys(jsonData).length === 3;",
+									"tests[\"3 users\"] = jsonData.users.length === 3;",
+									"",
+									"",
+									"var idx = 0;",
+									"var user = jsonData.users[idx];",
+									"tests[\"[\"+idx+\"] id\"] = user.id === 1;",
+									"tests[\"[\"+idx+\"] username\"] = user.username === \"a@a.com\";",
+									"tests[\"[\"+idx+\"] firstname\"] = user.firstName === \"admin\";",
+									"tests[\"[\"+idx+\"] lastname\"] = user.lastName === \"admin\";",
+									"tests[\"[\"+idx+\"] field numbers\"] = Object.keys(user).length === 4;",
+									"",
+									"",
+									"idx++;",
+									"user = jsonData.users[idx];",
+									"tests[\"[\"+idx+\"] id\"] = user.id === 2;",
+									"tests[\"[\"+idx+\"] username\"] = user.username === \"u@u.com\";",
+									"tests[\"[\"+idx+\"] firstname\"] = user.firstName === \"user\";",
+									"tests[\"[\"+idx+\"] lastname\"] = user.lastName === \"user\";",
+									"tests[\"[\"+idx+\"] field numbers\"] = Object.keys(user).length === 4;",
+									"",
+									"",
+									"idx++;",
+									"user = jsonData.users[idx];",
+									"tests[\"[\"+idx+\"] id\"] = user.id === 3;",
+									"tests[\"[\"+idx+\"] username\"] = user.username === \"d@d.com\";",
+									"tests[\"[\"+idx+\"] firstname\"] = user.firstName === \"user_d\";",
+									"tests[\"[\"+idx+\"] lastname\"] = user.lastName === \"user_d\";",
+									"tests[\"[\"+idx+\"] field numbers\"] = Object.keys(user).length === 4;"
 								]
 							}
 						}
@@ -143,6 +202,48 @@
 								"key": "Authorization",
 								"value": "{{curLogin}}",
 								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET /users/1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var user = jsonData;",
+									"tests[\"id\"] = user.id === 1;",
+									"tests[\"username\"] = user.username === \"a@a.com\";",
+									"tests[\"firstname\"] = user.firstName === \"admin\";",
+									"tests[\"lastname\"] = user.lastName === \"admin\";",
+									"tests[\"lastPasswordDate\"] = user.lastPasswordResetDate === 1451635200000;",
+									"tests[\"iso\"] = user.iso === \"ISO1\";",
+									"tests[\"roles\"] = user.roles.length === 2;",
+									"tests[\"role Admin\"] = user.roles[0].id === 1;",
+									"tests[\"role User\"] = user.roles[1].id === 2;",
+									"tests[\"field numbers\"] = Object.keys(user).length === 7;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/users/1",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{curLogin}}",
+								"description": "Token for Authorization"
 							}
 						],
 						"body": {},
@@ -196,7 +297,7 @@
 					"response": []
 				},
 				{
-					"name": "GET /user",
+					"name": "GET /users",
 					"event": [
 						{
 							"listen": "test",
@@ -206,18 +307,35 @@
 									"tests[\"Status code is 200\"] = responseCode.code === 200;",
 									"",
 									"var jsonData = JSON.parse(responseBody);",
-									"tests[\"User Returned\"] = jsonData;",
-									"tests[\"Username\"] = jsonData.username;",
-									"tests[\"firstName\"] = jsonData.firstName;",
-									"tests[\"lastName\"] = jsonData.lastName;",
-									"tests[\"enabled\"] = jsonData.hasOwnProperty('enabled');",
-									"tests[\"Authorities\"] = jsonData.authorities;"
+									"tests[\"2 Users Returned\"] = jsonData.length === 2;",
+									"",
+									"var idx = 0;",
+									"tests[\"[\"+idx+\"] id\"] = jsonData[idx].id === 1;",
+									"tests[\"[\"+idx+\"] username\"] = jsonData[idx].username === \"a@a.com\";",
+									"tests[\"[\"+idx+\"] firstname\"] = jsonData[idx].firstName === \"admin\";",
+									"tests[\"[\"+idx+\"] lastname\"] = jsonData[idx].lastName === \"admin\";",
+									"tests[\"[\"+idx+\"] roles\"] = jsonData[idx].roles.length === 2;",
+									"tests[\"[\"+idx+\"] role Admin\"] = jsonData[idx].roles[0].id === 1;",
+									"tests[\"[\"+idx+\"] role User\"] = jsonData[idx].roles[1].id === 2;",
+									"tests[\"[\"+idx+\"] field numbers\"] = Object.keys(jsonData[idx]).length === 5;",
+									"",
+									"",
+									"idx++;",
+									"",
+									"tests[\"[\"+idx+\"] id\"] = jsonData[idx].id === 2;",
+									"tests[\"[\"+idx+\"] username\"] = jsonData[idx].username === \"u@u.com\";",
+									"tests[\"[\"+idx+\"] firstname\"] = jsonData[idx].firstName === \"user\";",
+									"tests[\"[\"+idx+\"] lastname\"] = jsonData[idx].lastName === \"user\";",
+									"tests[\"[\"+idx+\"] roles\"] = jsonData[idx].roles.length === 1;",
+									"tests[\"[\"+idx+\"] role User\"] = jsonData[idx].roles[0].id === 1;",
+									"tests[\"[\"+idx+\"] field numbers\"] = Object.keys(jsonData[idx]).length === 5;",
+									""
 								]
 							}
 						}
 					],
 					"request": {
-						"url": "{{url}}/user",
+						"url": "{{url}}/users",
 						"method": "GET",
 						"header": [
 							{
@@ -261,7 +379,7 @@
 					"response": []
 				},
 				{
-					"name": "GET /user/2",
+					"name": "GET /users/2",
 					"event": [
 						{
 							"listen": "test",
@@ -271,17 +389,23 @@
 									"tests[\"Status code is 200\"] = responseCode.code === 200;",
 									"",
 									"var jsonData = JSON.parse(responseBody);",
-									"tests[\"User Returned\"] = jsonData;",
-									"tests[\"Username\"] = jsonData.username;",
-									"tests[\"firstName\"] = jsonData.firstName;",
-									"tests[\"lastName\"] = jsonData.lastName;",
-									"tests[\"roles\"] = jsonData.roles;"
+									"",
+									"var user = jsonData;",
+									"tests[\"id\"] = user.id === 2;",
+									"tests[\"username\"] = user.username === \"u@u.com\";",
+									"tests[\"firstname\"] = user.firstName === \"user\";",
+									"tests[\"lastname\"] = user.lastName === \"user\";",
+									"tests[\"lastPasswordDate\"] = user.lastPasswordResetDate === 1451635200000;",
+									"tests[\"iso\"] = user.iso === \"ISO2\";",
+									"tests[\"roles\"] = user.roles.length === 1;",
+									"tests[\"role Admin\"] = user.roles[0].id === 1;",
+									"tests[\"field numbers\"] = Object.keys(user).length === 7;"
 								]
 							}
 						}
 					],
 					"request": {
-						"url": "{{url}}/user/2",
+						"url": "{{url}}/users/2",
 						"method": "GET",
 						"header": [
 							{
@@ -291,6 +415,340 @@
 							}
 						],
 						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET /users/3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var user = jsonData;",
+									"tests[\"id\"] = user.id === 3;",
+									"tests[\"username\"] = user.username === \"d@d.com\";",
+									"tests[\"firstname\"] = user.firstName === \"user_d\";",
+									"tests[\"lastname\"] = user.lastName === \"user_d\";",
+									"tests[\"roles\"] = user.roles.length === 1;",
+									"tests[\"role Admin\"] = user.roles[0].id === 1;",
+									"tests[\"field numbers\"] = Object.keys(user).length === 5;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/users/3",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{curLogin}}",
+								"description": "Token for Authorization"
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET /role/1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 403;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests[\"Error Returned\"] = jsonData;",
+									"tests[\"message\"] = jsonData.message;",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/role/1",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{curLogin}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "003 NewUserTests",
+			"description": "",
+			"item": [
+				{
+					"name": "GET /users copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 401;",
+									""
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"postman.clearEnvironmentVariable(\"curLogin\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/users",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{curLogin}}",
+								"description": "Token for Authorization"
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST /users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests['Status is 400'] = responseCode.code === 400;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests[\"BAD_REQUEST\"] = jsonData.status === \"BAD_REQUEST\";",
+									"tests[\"error0 missingField\"] = jsonData.errors[0].error === \"missingField\";",
+									"tests[\"error0 firstName\"] = jsonData.errors[0].message === \"firstName\";",
+									"",
+									"tests[\"error1 missingField\"] = jsonData.errors[1].error === \"missingField\";",
+									"tests[\"error1 lastName\"] = jsonData.errors[1].message === \"lastName\";",
+									"",
+									"tests[\"error2 missingField\"] = jsonData.errors[2].error === \"missingField\";",
+									"tests[\"error2 password\"] = jsonData.errors[2].message === \"password\";",
+									"",
+									"tests[\"error3 missingField\"] = jsonData.errors[3].error === \"missingField\";",
+									"tests[\"error3 passwordConfirm\"] = jsonData.errors[3].message === \"passwordConfirm\";",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/users",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\" : \"vstumpf\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST /users 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests['Status is 400'] = responseCode.code === 400;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests[\"BAD_REQUEST\"] = jsonData.status === \"BAD_REQUEST\";",
+									"",
+									"",
+									"tests[\"error0 passwordMismatch\"] = jsonData.errors[0].error === \"passwordMismatch\";",
+									"tests[\"error0 password\"] = jsonData.errors[0].message === \"password\";",
+									"",
+									"tests[\"error1 badValue\"] = jsonData.errors[1].error === \"badValue\";",
+									"tests[\"error1 username\"] = jsonData.errors[1].message === \"username\";",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/users",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\" : \"vstumpf\",\n\t\"firstName\" : \"Vincent\",\n\t\"lastName\" : \"Stumpf\",\n\t\"password\" : \"password\",\n\t\"passwordConfirm\" : \"password1\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST /users 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests['Status is 200'] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var user = jsonData;",
+									"tests[\"id\"] = user.id === 4;",
+									"tests[\"username\"] = user.username === \"vstumpf@gmail.com\";",
+									"tests[\"firstname\"] = user.firstName === \"Vincent\";",
+									"tests[\"lastname\"] = user.lastName === \"Stumpf\";",
+									"tests[\"lastPasswordDate\"] = user.lastPasswordResetDate > 1451635200000;",
+									"tests[\"iso\"] = user.iso === null;",
+									"tests[\"roles\"] = user.roles.length === 1;",
+									"tests[\"role Admin\"] = user.roles[0].id === 1;",
+									"tests[\"field numbers\"] = Object.keys(user).length === 7;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/users",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\" : \"vstumpf@gmail.com\",\n\t\"firstName\" : \"Vincent\",\n\t\"lastName\" : \"Stumpf\",\n\t\"password\" : \"password\",\n\t\"passwordConfirm\" : \"password\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST /users 4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests['Status is 400'] = responseCode.code === 400;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests[\"BAD_REQUEST\"] = jsonData.status === \"BAD_REQUEST\";",
+									"",
+									"",
+									"tests[\"error0 duplicateUsername\"] = jsonData.errors[0].error === \"duplicateUsername\";",
+									"tests[\"error0 username\"] = jsonData.errors[0].message === \"username\";",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/users",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\" : \"vstumpf@gmail.com\",\n\t\"firstName\" : \"Vincent\",\n\t\"lastName\" : \"Stumpf\",\n\t\"password\" : \"password\",\n\t\"passwordConfirm\" : \"password\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Login Vstumpf",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests[\"Token Returned\"] = jsonData.token;",
+									"if (tests[\"Token Returned\"]) {",
+									"    postman.setEnvironmentVariable(\"curLogin\", jsonData.token);",
+									"}",
+									"",
+									""
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"postman.clearEnvironmentVariable(\"curLogin\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/auth",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"vstumpf@gmail.com\",\n\t\"password\": \"password\"\n}"
+						},
 						"description": ""
 					},
 					"response": []
