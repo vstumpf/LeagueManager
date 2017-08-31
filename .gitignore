@@ -4,6 +4,9 @@ mvnw
 mvnw.cmd
 !.mvn/wrapper/maven-wrapper.jar
 
+### AngularCLI built files ###
+src/main/webapp/
+
 ### STS ###
 .apt_generated
 .classpath

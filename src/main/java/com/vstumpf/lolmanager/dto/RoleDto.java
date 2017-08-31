@@ -7,6 +7,7 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Vincent on 8/4/2017.
@@ -20,10 +21,14 @@ public class RoleDto {
     public RoleDto(Role r) {
         this.id = r.getId();
         this.role = r.getRole();
+        users = r.getUsers().stream().map(RoleUserDto::new).collect(Collectors.toList());
+
+        /*
         users = new ArrayList<>();
         for (User u : r.getUsers()) {
             users.add(new RoleUserDto(u));
         }
+        */
     }
 
     @Data
