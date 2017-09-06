@@ -26,4 +26,7 @@ public class ValidatorUtils {
         return emailPattern.matcher(value).matches();
     }
 
+    public boolean isValidPassword(String value) {
+        return value.length() > 9;
+    }
 }

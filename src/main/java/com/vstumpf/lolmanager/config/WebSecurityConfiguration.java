@@ -3,12 +3,14 @@ package com.vstumpf.lolmanager.config;
 import com.vstumpf.lolmanager.security.JwtAuthenticationEntryPoint;
 import com.vstumpf.lolmanager.security.JwtAuthenticationTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -31,6 +33,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Value("${jwt.route.authentication.path}")
+    private String authPath;
+
+    @Value("${api.route}")
+    private String apiPath;
+
     @Autowired
     protected void configureAuthentication(AuthenticationManagerBuilder auth) throws Exception {
         auth
@@ -41,6 +49,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public JwtAuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
         return new JwtAuthenticationTokenFilter();
+    }
+
+    @Bean
+    public Html5ModeUrlSupportFilter html5ModeUrlSupportFilterBean() throws Exception {
+        return new Html5ModeUrlSupportFilter();
     }
 
     @Bean
@@ -62,23 +75,32 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests()
                 .antMatchers(
-                        HttpMethod.GET,
+                        //HttpMethod.GET,
                         "/",
                         "/*.html",
+                        "/*.css",
                         "/favicon.ico",
                         "/**/*.html",
                         "/**/*.css",
                         "/**/*.js"
                 ).permitAll()
-                .antMatchers("/auth/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/users", "/users/").permitAll()
+                .antMatchers("/"+apiPath+"/"+authPath+"/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/"+apiPath+"/users", "/"+apiPath+"/users/").permitAll()
                 .anyRequest().authenticated();
 
         // Custom JWT based security filter
         http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
 
+        // HTML5 URL handling
+        http.addFilterBefore(html5ModeUrlSupportFilterBean(), JwtAuthenticationTokenFilter.class);
+
         //disable page caching
         http.headers().cacheControl();
     }
 
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/*.html", "/*.js", "/*.css");
+    }
 }

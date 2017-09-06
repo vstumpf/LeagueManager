@@ -1,6 +1,7 @@
 package com.vstumpf.lolmanager.service;
 
 import com.vstumpf.lolmanager.security.JwtUser;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -20,5 +21,9 @@ public class CurrentService {
 
     public boolean isAdmin() {
         return ((JwtUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).isAdmin();
+    }
+
+    public boolean isOwnerOrAdmin(long id) {
+        return getId() == id || isAdmin();
     }
 }

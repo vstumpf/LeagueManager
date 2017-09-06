@@ -10,9 +10,11 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,15 +29,34 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         super();
     }
 
+    /*
     @ExceptionHandler({ValidatorException.class})
     public ResponseEntity<Object> handleBadRequest(
             final ValidatorException e,
+            //final HttpHeaders headers,
+            //final HttpStatus status,
+            final WebRequest request) {
+        final ErrorDto err = e.getErrorDto();
+        //return handleExceptionInternal(e, err, headers, err.getStatus(), request);
+        return handleExceptionInternal(e, err, new HttpHeaders(), err.getStatus(), request);
+    }*/
+    @ExceptionHandler({ValidatorException.class})
+    @ResponseBody
+    public ErrorDto handleBadRequest(final ValidatorException e, HttpServletResponse response) {
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        return e.getErrorDto();
+    }
+
+    @ExceptionHandler(PermissionException.class)
+    public ResponseEntity<Object> handleNoPermission(
+            final PermissionException e,
             final HttpHeaders headers,
             final HttpStatus status,
             final WebRequest request) {
-        final ErrorDto err = e.getErrorDto();
+        final ErrorDto err = new ErrorDto(HttpStatus.BAD_REQUEST);
         return handleExceptionInternal(e, err, headers, err.getStatus(), request);
     }
+
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(

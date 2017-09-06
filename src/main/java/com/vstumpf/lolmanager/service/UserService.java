@@ -1,6 +1,7 @@
 package com.vstumpf.lolmanager.service;
 
 import com.vstumpf.lolmanager.dto.UserDto;
+import com.vstumpf.lolmanager.dto.UserEditDto;
 import com.vstumpf.lolmanager.dto.UserOwnedDto;
 import com.vstumpf.lolmanager.dto.UserRegisterDto;
 import com.vstumpf.lolmanager.model.Role;
@@ -8,6 +9,7 @@ import com.vstumpf.lolmanager.model.RoleName;
 import com.vstumpf.lolmanager.model.User;
 import com.vstumpf.lolmanager.repository.RoleRepository;
 import com.vstumpf.lolmanager.repository.UserRepository;
+import com.vstumpf.lolmanager.validator.UserEditDtoValidator;
 import com.vstumpf.lolmanager.validator.UserRegisterDtoValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +39,10 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserEditDtoValidator userEditDtoValidator;
+
 
     public User convertToEntity(UserDto userDto) {
         return users.getOne(userDto.getId());
@@ -74,5 +80,13 @@ public class UserService {
 
     public List<UserDto> getUsersAdmin(Pageable pageable) {
         return users.findAll(pageable).getContent().stream().map(UserOwnedDto::new).collect(Collectors.toList());
+    }
+
+    public UserDto putUserById(long id, UserEditDto userEditDto) {
+        User u = users.getOne(id);
+        u.setPassword(passwordEncoder.encode(userEditDto.getPassword()));
+        u.setLastPasswordResetDate(new Date());
+        users.save(u);
+        return new UserOwnedDto(u);
     }
 }

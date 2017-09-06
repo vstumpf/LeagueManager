@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.servlet.tags.form.ErrorsTag;
 
 import java.util.ArrayList;
@@ -34,8 +37,15 @@ public class ErrorDto {
         errors.add(new ErrorTag(error, message));
         return this;
     }
-
-    //public ErrorDto addErrors(Error)
+    public ErrorDto addErrors(BindingResult bindingResult) {
+        for (FieldError error : bindingResult.getFieldErrors()) {
+            addError(error.getCode(), error.getField());
+        }
+        for (ObjectError error : bindingResult.getGlobalErrors()) {
+            addError(error.getCode(), error.getObjectName());
+        }
+        return this;
+    }
 
     @Data
     @AllArgsConstructor

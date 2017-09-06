@@ -6,7 +6,7 @@
 	<groupId>com.vstumpf</groupId>
 	<artifactId>lolmanager</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<name>LoLManager</name>
 	<description>LoLManager</description>
