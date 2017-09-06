@@ -39,7 +39,7 @@ public class UserRegisterDtoValidator implements Validator {
             return;
 
         if (!user.getPassword().equals(user.getPasswordConfirm()))
-            errors.rejectValue("password", ErrorCode.PASSWORD_MISMATCH.mes());
+            errors.rejectValue("passwordConfirm", ErrorCode.PASSWORD_MISMATCH.mes());
         if (!validatorUtils.isValidPassword(user.getPassword()))
             errors.rejectValue("password", ErrorCode.BAD_VALUE.mes());
         if (!validatorUtils.isEmail(user.getUsername()))

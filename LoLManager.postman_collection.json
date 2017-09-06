@@ -227,11 +227,14 @@
 									"tests[\"firstname\"] = user.firstName === \"admin\";",
 									"tests[\"lastname\"] = user.lastName === \"admin\";",
 									"tests[\"lastPasswordDate\"] = user.lastPasswordResetDate === 1451635200000;",
+									"",
 									"tests[\"iso\"] = user.iso === \"ISO1\";",
 									"tests[\"roles\"] = user.roles.length === 2;",
 									"tests[\"role Admin\"] = user.roles[0].id === 1;",
 									"tests[\"role User\"] = user.roles[1].id === 2;",
-									"tests[\"field numbers\"] = Object.keys(user).length === 7;"
+									"tests[\"field numbers\"] = Object.keys(user).length === 7;",
+									"",
+									"pm.globals.set(\"admin.lastPasswordResetDate\", user.lastPasswordResetDate);"
 								]
 							}
 						}
@@ -247,6 +250,230 @@
 							}
 						],
 						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /users/1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests['Status is 400'] = responseCode.code === 400;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests[\"BAD_REQUEST\"] = jsonData.status === \"BAD_REQUEST\";",
+									"",
+									"tests[\"One error\"] = jsonData.errors.length === 1;",
+									"",
+									"tests[\"error0 passwordMismatch\"] = jsonData.errors[0].error === \"passwordMismatch\";",
+									"tests[\"error0 password\"] = jsonData.errors[0].message === \"password\";",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/users/1",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{curLogin}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"password\": \"passwordfsa\",\n\t\"passwordConfirm\": \"passs\",\n\t\"passwordOld\": \"pw\"\n}"
+						},
+						"description": "incorrect password edit\n"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /users/1 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests['Status is 400'] = responseCode.code === 400;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests[\"BAD_REQUEST\"] = jsonData.status === \"BAD_REQUEST\";",
+									"",
+									"tests[\"One error\"] = jsonData.errors.length === 1;",
+									"",
+									"tests[\"error0 badValue\"] = jsonData.errors[0].error === \"badValue\";",
+									"tests[\"error0 password\"] = jsonData.errors[0].message === \"password\";",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/users/1",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{curLogin}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"password\": \"pass\",\n\t\"passwordConfirm\": \"pass\",\n\t\"passwordOld\": \"pw\"\n}"
+						},
+						"description": "incorrect password edit\n"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /users/1 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests['Status is 400'] = responseCode.code === 400;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests[\"BAD_REQUEST\"] = jsonData.status === \"BAD_REQUEST\";",
+									"",
+									"tests[\"One error\"] = jsonData.errors.length === 1;",
+									"",
+									"tests[\"error0 passwordMismatch\"] = jsonData.errors[0].error === \"passwordMismatch\";",
+									"tests[\"error0 passwordOld\"] = jsonData.errors[0].message === \"passwordOld\";",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/users/1",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{curLogin}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"password\": \"password1234\",\n\t\"passwordConfirm\": \"password1234\",\n\t\"passwordOld\": \"pw\"\n}"
+						},
+						"description": "incorrect password edit\n"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /users/1 4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var user = jsonData;",
+									"tests[\"id\"] = user.id === 1;",
+									"tests[\"username\"] = user.username === \"a@a.com\";",
+									"tests[\"firstname\"] = user.firstName === \"admin\";",
+									"tests[\"lastname\"] = user.lastName === \"admin\";",
+									"tests[\"lastPasswordDate\"] = user.lastPasswordResetDate > pm.globals.get(\"admin.lastPasswordResetDate\");",
+									"tests[\"iso\"] = user.iso === \"ISO1\";",
+									"tests[\"roles\"] = user.roles.length === 2;",
+									"tests[\"role Admin\"] = user.roles[0].id === 1;",
+									"tests[\"role User\"] = user.roles[1].id === 2;",
+									"tests[\"field numbers\"] = Object.keys(user).length === 7;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/users/1",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{curLogin}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"password\": \"newpassword\",\n\t\"passwordConfirm\": \"newpassword\",\n\t\"passwordOld\": \"admin\"\n}"
+						},
+						"description": "incorrect password edit\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Login Admin 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests[\"Token Returned\"] = jsonData.token;",
+									"if (tests[\"Token Returned\"]) {",
+									"    postman.setEnvironmentVariable(\"curLogin\", jsonData.token);",
+									"}",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/auth",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"a@a.com\",\n  \"password\": \"newpassword\"\n}"
+						},
 						"description": ""
 					},
 					"response": []
@@ -546,6 +773,9 @@
 									"",
 									"var jsonData = JSON.parse(responseBody);",
 									"tests[\"BAD_REQUEST\"] = jsonData.status === \"BAD_REQUEST\";",
+									"",
+									"tests[\"error count\"] = jsonData.errors.length === 4;",
+									"",
 									"tests[\"error0 missingField\"] = jsonData.errors[0].error === \"missingField\";",
 									"tests[\"error0 firstName\"] = jsonData.errors[0].message === \"firstName\";",
 									"",
@@ -594,11 +824,17 @@
 									"tests[\"BAD_REQUEST\"] = jsonData.status === \"BAD_REQUEST\";",
 									"",
 									"",
+									"tests[\"three errors\"] = jsonData.errors.length === 3;",
+									"",
 									"tests[\"error0 passwordMismatch\"] = jsonData.errors[0].error === \"passwordMismatch\";",
-									"tests[\"error0 password\"] = jsonData.errors[0].message === \"password\";",
+									"tests[\"error0 passwordConfirm\"] = jsonData.errors[0].message === \"passwordConfirm\";",
 									"",
 									"tests[\"error1 badValue\"] = jsonData.errors[1].error === \"badValue\";",
-									"tests[\"error1 username\"] = jsonData.errors[1].message === \"username\";",
+									"tests[\"error1 password\"] = jsonData.errors[1].message === \"password\";",
+									"",
+									"",
+									"tests[\"error2 badValue\"] = jsonData.errors[2].error === \"badValue\";",
+									"tests[\"error2 username\"] = jsonData.errors[2].message === \"username\";",
 									""
 								]
 							}
@@ -660,7 +896,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"username\" : \"vstumpf@gmail.com\",\n\t\"firstName\" : \"Vincent\",\n\t\"lastName\" : \"Stumpf\",\n\t\"password\" : \"password\",\n\t\"passwordConfirm\" : \"password\"\n}"
+							"raw": "{\n\t\"username\" : \"vstumpf@gmail.com\",\n\t\"firstName\" : \"Vincent\",\n\t\"lastName\" : \"Stumpf\",\n\t\"password\" : \"password10char\",\n\t\"passwordConfirm\" : \"password10char\"\n}"
 						},
 						"description": ""
 					},
@@ -679,6 +915,7 @@
 									"var jsonData = JSON.parse(responseBody);",
 									"tests[\"BAD_REQUEST\"] = jsonData.status === \"BAD_REQUEST\";",
 									"",
+									"tests[\"error count\"] = jsonData.errors.length === 1;",
 									"",
 									"tests[\"error0 duplicateUsername\"] = jsonData.errors[0].error === \"duplicateUsername\";",
 									"tests[\"error0 username\"] = jsonData.errors[0].message === \"username\";",
@@ -699,7 +936,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"username\" : \"vstumpf@gmail.com\",\n\t\"firstName\" : \"Vincent\",\n\t\"lastName\" : \"Stumpf\",\n\t\"password\" : \"password\",\n\t\"passwordConfirm\" : \"password\"\n}"
+							"raw": "{\n\t\"username\" : \"vstumpf@gmail.com\",\n\t\"firstName\" : \"Vincent\",\n\t\"lastName\" : \"Stumpf\",\n\t\"password\" : \"password10char\",\n\t\"passwordConfirm\" : \"password10char\"\n}"
 						},
 						"description": ""
 					},
@@ -747,7 +984,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"username\": \"vstumpf@gmail.com\",\n\t\"password\": \"password\"\n}"
+							"raw": "{\n\t\"username\": \"vstumpf@gmail.com\",\n\t\"password\": \"password10char\"\n}"
 						},
 						"description": ""
 					},

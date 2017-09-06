@@ -4,6 +4,8 @@ import com.vstumpf.lolmanager.common.utils.ValidatorUtils;
 import com.vstumpf.lolmanager.dto.UserEditDto;
 import com.vstumpf.lolmanager.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -16,6 +18,9 @@ public class UserEditDtoValidator implements Validator {
 
     @Autowired
     private ValidatorUtils validatorUtils;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public boolean supports(Class<?> clazz) {
         return UserEditDto.class.isAssignableFrom(clazz);
@@ -30,19 +35,15 @@ public class UserEditDtoValidator implements Validator {
         if (errors.hasErrors())
             return;
 
-        if (validatorUtils.isValidPassword(u.getPassword()))
+        if (!validatorUtils.isValidPassword(u.getPassword()))
             errors.rejectValue("password", ErrorCode.BAD_VALUE.mes());
-
-        if (errors.hasErrors())
-            return;
-
         if (!u.getPassword().equals(u.getPasswordConfirm()))
             errors.rejectValue("password", ErrorCode.PASSWORD_MISMATCH.mes());
 
         if (errors.hasErrors())
             return;
 
-        if (!users.getOne(u.getId()).getPassword().equals(u.getPasswordOld()))
+        if (!passwordEncoder.matches(u.getPasswordOld(), users.getOne(u.getId()).getPassword()))
             errors.rejectValue("passwordOld", ErrorCode.PASSWORD_MISMATCH.mes());
     }
 
