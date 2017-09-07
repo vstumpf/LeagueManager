@@ -10,6 +10,8 @@ import { DashboardComponent } from "./dashboard.component";
 import { AppRoutingModule } from "./app-routing.module";
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { JWTInterceptor } from "./jwt.interceptor";
+import { AuthService } from "./auth.service";
+import { HttpModule } from "@angular/http";
 
 @NgModule({
   declarations: [
@@ -21,11 +23,14 @@ import { JWTInterceptor } from "./jwt.interceptor";
   imports: [
     BrowserModule,
     FormsModule,
+    HttpModule,
     HttpClientModule,
     AppRoutingModule,
   ],
   providers: [
-    UserService, { provide: HTTP_INTERCEPTORS, useClass: JWTInterceptor, multi: true }
+    AuthService,
+    UserService,
+    { provide: HTTP_INTERCEPTORS, useClass: JWTInterceptor, multi: true }
 
   ],
   bootstrap: [AppComponent]

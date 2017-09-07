@@ -82,6 +82,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/favicon.ico",
                         "/**/*.html",
                         "/**/*.css",
+                        "/**/*.map",
                         "/**/*.js"
                 ).permitAll()
                 .antMatchers("/"+apiPath+"/"+authPath+"/**").permitAll()
@@ -101,6 +102,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/*.html", "/*.js", "/*.css");
+        web.ignoring().antMatchers("/*.html", "/*.js", "/*.css", "/*.map");
     }
 }
