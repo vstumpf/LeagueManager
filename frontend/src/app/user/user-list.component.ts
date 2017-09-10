@@ -1,20 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 
-import { User } from "./user";
-import { UserService } from "./user.service";
+import { UserDto } from "./user-dto";
+import { UserService } from "../core/user.service";
 import { Router } from "@angular/router";
 
 
 @Component({
-  selector: 'users',
-  templateUrl: './users.component.html',
-  styleUrls: ['./users.component.css'],
+  selector: 'user-list',
+  templateUrl: './user-list.component.html',
+  styleUrls: ['./user-list.component.css'],
   providers: []
 })
-export class UsersComponent implements OnInit {
+export class UserListComponent implements OnInit {
   school = 'Cal Poly SLO';
-  users: User[];
-  selectedUser : User;
+  users: UserDto[];
+  selectedUser : UserDto;
 
   constructor(
     private router: Router,
@@ -30,7 +30,7 @@ export class UsersComponent implements OnInit {
     this.getUsers();
   }
 
-  onSelect(user: User): void {
+  onSelect(user: UserDto): void {
     this.selectedUser = user;
   }
 

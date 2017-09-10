@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { User } from "./user";
-import { UserService } from "./user.service";
+import { UserService } from "../core/user.service";
 import { ActivatedRoute, ParamMap } from "@angular/router";
 import { Location } from "@angular/common";
 
 import 'rxjs/add/operator/switchMap';
+import { UserDto } from "./user-dto";
 
 @Component({
   selector: 'user-detail',
@@ -30,5 +30,5 @@ export class UserDetailComponent implements OnInit {
     this.location.back();
   }
 
-  @Input() user: User;
+  @Input() user: UserDto;
 }

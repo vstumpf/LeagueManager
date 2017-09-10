@@ -3,36 +3,30 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from "@angular/forms";
 
 import { AppComponent } from './app.component';
-import { UserDetailComponent } from './user-detail.component';
-import { UsersComponent } from "./users.component";
-import { UserService } from "./user.service";
+import { UserDetailComponent } from './user/user-detail.component';
+import { UserListComponent } from "./user/user-list.component";
+import { UserService } from "./core/user.service";
 import { DashboardComponent } from "./dashboard.component";
 import { AppRoutingModule } from "./app-routing.module";
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
-import { JWTInterceptor } from "./jwt.interceptor";
-import { AuthService } from "./auth.service";
+import { JWTInterceptor } from "./core/jwt.interceptor";
+import { AuthService } from "./core/auth.service";
 import { HttpModule } from "@angular/http";
+import { CoreModule } from "./core/core.module";
 
 @NgModule({
   declarations: [
     AppComponent,
     DashboardComponent,
     UserDetailComponent,
-    UsersComponent,
+    UserListComponent,
   ],
   imports: [
     BrowserModule,
-    FormsModule,
-    HttpModule,
-    HttpClientModule,
+    CoreModule,
     AppRoutingModule,
   ],
-  providers: [
-    AuthService,
-    UserService,
-    { provide: HTTP_INTERCEPTORS, useClass: JWTInterceptor, multi: true }
-
-  ],
+  providers: [  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

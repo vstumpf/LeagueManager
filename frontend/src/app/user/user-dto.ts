@@ -1,4 +1,4 @@
-export class User {
+export class UserDto {
   id: number;
   firstName: string;
   lastName: string;
@@ -7,7 +7,7 @@ export class User {
   roles: {
     id: number;
     role: string;
-  }[]
+  }[];
 
   //admin or personal settings
   lastPasswordResetDate: number;
