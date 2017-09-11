@@ -11,5 +11,7 @@ public class JwtAuthenticationResponse {
 
     @Getter
     private final String token;
+    @Getter
+    private final long userId;
 
 }
