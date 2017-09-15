@@ -3,11 +3,7 @@ package com.vstumpf.lolmanager.controller;
 import com.vstumpf.lolmanager.dto.UserDto;
 import com.vstumpf.lolmanager.dto.UserEditDto;
 import com.vstumpf.lolmanager.dto.UserRegisterDto;
-import com.vstumpf.lolmanager.error.PermissionException;
-import com.vstumpf.lolmanager.model.User;
-import com.vstumpf.lolmanager.repository.UserRepository;
 import com.vstumpf.lolmanager.security.JwtTokenUtil;
-import com.vstumpf.lolmanager.security.JwtUser;
 import com.vstumpf.lolmanager.service.CurrentService;
 import com.vstumpf.lolmanager.service.UserService;
 import com.vstumpf.lolmanager.validator.UserEditDtoValidator;
@@ -20,12 +16,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.naming.Binding;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -35,7 +28,6 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("/users")
 public class UserController {
     @Value("${jwt.header}")
     private String tokenHeader;
@@ -63,16 +55,13 @@ public class UserController {
         binder.addValidators(userRegisterDtoValidator);
     }
 
-    /*
-    @GetMapping(value = "user")
-    public JwtUser getAuthenticatedUser(HttpServletRequest request) {
-        String token = request.getHeader(tokenHeader);
-        String username = jwtTokenUtil.getUsernameFromToken(token);
-        JwtUser user = (JwtUser) userDetailsService.loadUserByUsername(username);
-        return user;
-    }*/
 
-    @GetMapping(value = "")
+    @GetMapping(value = "user")
+    public UserDto getAuthenticatedUser() {
+        return users.getUserByIdOwn(currentService.getId());
+    }
+
+    @GetMapping(value = "/users")
     public List<UserDto> getUsers(@PageableDefault Pageable pageable) {
         if (currentService.isAdmin()) {
             return users.getUsersAdmin(pageable);
@@ -80,12 +69,12 @@ public class UserController {
         return users.getUsers(pageable);
     }
 
-    @PostMapping
+    @PostMapping(value = "/users")
     public UserDto postUser(@Valid @RequestBody UserRegisterDto userRegisterDto) {
         return users.postNewUser(userRegisterDto);
     }
 
-    @GetMapping(value = "/{userId}")
+    @GetMapping(value = "/users/{userId}")
     public UserDto getUserByUserId(@PathVariable long userId) {
         if (currentService.isOwnerOrAdmin(userId))
             return users.getUserByIdOwn(userId);
@@ -93,7 +82,7 @@ public class UserController {
         return users.getUserByIdOther(userId);
     }
 
-    @PutMapping(value = "/{userId}")
+    @PutMapping(value = "/users/{userId}")
     @PreAuthorize("@currentService.isOwnerOrAdmin(#userId)")
     public UserDto putUserByUserId(@PathVariable long userId,
                                    @RequestBody UserEditDto userEditDto,

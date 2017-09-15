@@ -33,6 +33,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getOutputStream().println(
                 mapper.writeValueAsString(
-                        new ErrorDto(HttpStatus.UNAUTHORIZED)));
+                        new ErrorDto(HttpStatus.UNAUTHORIZED).addError(ErrorCode.BAD_LOGIN.mes(), ErrorCode.BAD_LOGIN.mes())));
     }
 }

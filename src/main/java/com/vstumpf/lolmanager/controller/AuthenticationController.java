@@ -4,7 +4,6 @@ import com.vstumpf.lolmanager.security.JwtAuthenticationRequest;
 import com.vstumpf.lolmanager.security.JwtTokenUtil;
 import com.vstumpf.lolmanager.security.JwtUser;
 import com.vstumpf.lolmanager.security.service.JwtAuthenticationResponse;
-import com.vstumpf.lolmanager.security.service.JwtUserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -61,7 +60,7 @@ public class AuthenticationController {
         final String token = jwtTokenUtil.generateToken(userDetails, device);
 
         // return the token
-        return ResponseEntity.ok(new JwtAuthenticationResponse(token, ((JwtUser)userDetails).getId()));
+        return ResponseEntity.ok(new JwtAuthenticationResponse(token));
     }
 
     @RequestMapping(value = "${jwt.route.authentication.refresh}", method = RequestMethod.GET)
@@ -72,7 +71,7 @@ public class AuthenticationController {
 
         if (jwtTokenUtil.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
             String refreshedToken = jwtTokenUtil.refreshToken(token);
-            return ResponseEntity.ok(new JwtAuthenticationResponse(refreshedToken, user.getId()));
+            return ResponseEntity.ok(new JwtAuthenticationResponse(refreshedToken));
         } else {
             return ResponseEntity.badRequest().body(null);
         }

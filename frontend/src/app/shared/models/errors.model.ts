@@ -1,3 +1,4 @@
 export class Errors {
-  errors: {[key: string]: string} = {};
+  errors: Array<Error>;
+  status: string;
 }

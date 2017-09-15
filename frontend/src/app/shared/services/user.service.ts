@@ -1,11 +1,11 @@
-import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
-import { ReplaySubject } from "rxjs/ReplaySubject";
-import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs/Rx";
-import { User, LoginResponse, PasswordChangeRequest } from "../models";
-import { ApiService } from "./api.service";
-import { JwtService } from "./jwt.service";
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Rx';
+import { LoginResponse, PasswordChangeRequest, User } from '../models';
+import { ApiService } from './api.service';
+import { JwtService } from './jwt.service';
 
 
 @Injectable()
@@ -22,24 +22,21 @@ export class UserService {
     private jwtService: JwtService
   ) {}
 
-  // Verify if JWT in localstorage with server j& load user's info.
+  // Verify if JWT in localstorage with server & load user's info.
   // This runs once on application startup
   populate() {
     if (this.jwtService.getToken()) {
-      this.apiService.get('/user')
-        .subscribe(
-          data => this.setAuth(data.user),
-          err => this.purgeAuth()
-        );
+      console.log('is in local');
+      this.populateCurrentUser();
     } else {
+      console.log('is not in local');
       this.purgeAuth();
     }
   }
 
-  setAuth(user: User) {
-    this.jwtService.saveToken(user.token);
-    this.currentUserSubject.next(user);
-    this.isAuthenticatedSubject.next(true);
+  setAuth(token: string) {
+    this.jwtService.saveToken(token);
+    this.populateCurrentUser();
   }
 
   purgeAuth() {
@@ -48,24 +45,32 @@ export class UserService {
     this.isAuthenticatedSubject.next(false);
   }
 
-  attemptAuth(credentials): Observable<User> {
+  attemptAuth(credentials): Observable<LoginResponse> {
     return this.apiService.post<LoginResponse>('/auth', credentials)
-      .lift(data => {
-        return this.apiService.get<User>('/users/'+data.userId)
-          .map( userData => {
-            this.currentUserSubject.next(userData);
-            return userData;
-          })
+      .map(data => {
+        this.setAuth(data.token);
+        return data;
       });
+  }
+
+  populateCurrentUser() {
+    this.apiService.get('/user')
+      .subscribe(
+        data => {
+          this.currentUserSubject.next(data);
+          this.isAuthenticatedSubject.next(true);
+        },
+        err => this.purgeAuth()
+      );
   }
 
   getCurrentUser(): User {
     return this.currentUserSubject.value;
   }
 
-  update(body : PasswordChangeRequest): Observable<User> {
+  update(body: PasswordChangeRequest): Observable<User> {
     return this.apiService
-      .put<User>('/users/'+ this.currentUserSubject.value.userId, body)
+      .put<User>('/users/' + this.currentUserSubject.value.userId, body)
       .map( data => {
         this.purgeAuth();
         return data;

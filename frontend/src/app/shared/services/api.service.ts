@@ -20,11 +20,13 @@ export class ApiService {
     if (this.jwtService.getToken()) {
       headersConfig['Authorization'] = this.jwtService.getToken();
     }
+
     return new HttpHeaders(headersConfig);
   }
 
   private formatErrors(error: any) {
-    return Observable.throw(error.json());
+    console.log('formatting errors!');
+    return Observable.throw(error.error);
   }
 
   get<t>(path: string, params: HttpParams = new HttpParams()): Observable<any> {
@@ -42,6 +44,8 @@ export class ApiService {
   }
 
   post<t>(path: string, body: Object = {}): Observable<any> {
+    console.log(`${environment.api_url}${path}`);
+    console.log(body);
     return this.http.post<t>(
       `${environment.api_url}${path}`,
       body,

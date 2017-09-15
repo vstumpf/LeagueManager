@@ -1,0 +1,5 @@
+<ul class="error-messages" *ngIf="errors && errors.errors">
+  <li *ngFor="let error of errors.errors">
+    {{ error | errorFormat }}
+  </li>
+</ul>

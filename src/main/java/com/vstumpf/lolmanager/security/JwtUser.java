@@ -1,7 +1,6 @@
 package com.vstumpf.lolmanager.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.vstumpf.lolmanager.model.RoleName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -31,7 +30,6 @@ public class JwtUser implements UserDetails {
         return username;
     }
 
-    @JsonIgnore
     public Long getId() {
         return id;
     }
