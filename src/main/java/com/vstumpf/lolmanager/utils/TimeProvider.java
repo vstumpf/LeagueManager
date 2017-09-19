@@ -1,4 +1,4 @@
-package com.vstumpf.lolmanager.common.utils;
+package com.vstumpf.lolmanager.utils;
 
 import org.springframework.stereotype.Component;
 

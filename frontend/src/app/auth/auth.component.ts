@@ -31,6 +31,10 @@ export class AuthComponent implements OnInit {
     this.route.url.subscribe(data => {
       // get the last piece of the url
       this.authType = data[data.length - 1].path;
+      if (this.authType === 'logout') {
+        this.logout();
+        return;
+      }
       this.title = (this.authType === 'login') ? 'Sign in' : 'Sign up';
       if (this.authType === 'register') {
         this.authForm.addControl('firstName', new FormControl());
@@ -54,5 +58,10 @@ export class AuthComponent implements OnInit {
           this.isSubmitting = false;
         }
       );
+  }
+
+  logout() {
+    this.userService.purgeAuth();
+    this.router.navigateByUrl('/');
   }
 }
