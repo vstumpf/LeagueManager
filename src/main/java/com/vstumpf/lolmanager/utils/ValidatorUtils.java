@@ -1,11 +1,7 @@
-package com.vstumpf.lolmanager.common.utils;
+package com.vstumpf.lolmanager.utils;
 
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.Errors;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**

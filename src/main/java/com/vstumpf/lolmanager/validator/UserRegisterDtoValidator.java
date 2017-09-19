@@ -1,8 +1,8 @@
 package com.vstumpf.lolmanager.validator;
 
-import com.vstumpf.lolmanager.common.utils.ValidatorUtils;
 import com.vstumpf.lolmanager.dto.UserRegisterDto;
 import com.vstumpf.lolmanager.repository.UserRepository;
+import com.vstumpf.lolmanager.utils.ValidatorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

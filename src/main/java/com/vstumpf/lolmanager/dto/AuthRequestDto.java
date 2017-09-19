@@ -1,4 +1,4 @@
-package com.vstumpf.lolmanager.security;
+package com.vstumpf.lolmanager.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,12 +8,14 @@ import lombok.Data;
  */
 @AllArgsConstructor
 @Data
-public class JwtAuthenticationRequest {
+public class AuthRequestDto {
 
     private String username;
     private String password;
 
-    public JwtAuthenticationRequest() { super(); }
+    public AuthRequestDto() {
+        super();
+    }
 
 
 }

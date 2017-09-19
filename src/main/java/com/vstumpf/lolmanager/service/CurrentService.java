@@ -1,7 +1,6 @@
 package com.vstumpf.lolmanager.service;
 
-import com.vstumpf.lolmanager.security.JwtUser;
-import org.springframework.security.core.Authentication;
+import com.vstumpf.lolmanager.model.User;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +15,11 @@ public class CurrentService {
     }
 
     public long getId() {
-        return ((JwtUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+        return ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
     }
 
     public boolean isAdmin() {
-        return ((JwtUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).isAdmin();
+        return ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).isAdmin();
     }
 
     public boolean isOwnerOrAdmin(long id) {

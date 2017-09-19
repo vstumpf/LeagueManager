@@ -4,22 +4,19 @@ import com.vstumpf.lolmanager.dto.UserDto;
 import com.vstumpf.lolmanager.dto.UserEditDto;
 import com.vstumpf.lolmanager.dto.UserOwnedDto;
 import com.vstumpf.lolmanager.dto.UserRegisterDto;
-import com.vstumpf.lolmanager.model.Role;
 import com.vstumpf.lolmanager.model.RoleName;
 import com.vstumpf.lolmanager.model.User;
 import com.vstumpf.lolmanager.repository.RoleRepository;
 import com.vstumpf.lolmanager.repository.UserRepository;
 import com.vstumpf.lolmanager.validator.UserEditDtoValidator;
-import com.vstumpf.lolmanager.validator.UserRegisterDtoValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 
-import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +27,7 @@ import java.util.stream.Collectors;
  */
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository users;
 
@@ -88,5 +85,15 @@ public class UserService {
         u.setLastPasswordResetDate(new Date());
         users.save(u);
         return new UserOwnedDto(u);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        User user = users.findByUsername(s);
+        if (user == null) {
+            throw new UsernameNotFoundException(String.format("No user found with username '%s'.", s));
+        } else {
+            return user;
+        }
     }
 }

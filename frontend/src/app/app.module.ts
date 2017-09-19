@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { AuthModule } from './auth/auth.module';
 import { ApiService, FooterComponent, HeaderComponent, JwtService, SharedModule, UserService } from './shared';
 import { HomeModule } from './home/home.module';
+import { AuthGuard } from './shared/services';
 
 const rootRouting: ModuleWithProviders = RouterModule.forRoot([]);
 
@@ -24,7 +25,8 @@ const rootRouting: ModuleWithProviders = RouterModule.forRoot([]);
   providers: [
     ApiService,
     JwtService,
-    UserService
+    UserService,
+    AuthGuard,
   ],
   bootstrap: [AppComponent]
 })
